@@ -1,40 +1,33 @@
-const productos = [
+let productos = [
   {
-    id: 1,
     nombre: "Café Etiopía 200g",
     precio: 2000,
     descuento: 0,
   },
   {
-    id: 2,
     nombre: "Café Colombia 200g",
     precio: 1400,
     descuento: 0.15,
   },
   {
-    id: 3,
     nombre: "Café Ecuador 200g",
     precio: 1900,
     descuento: 0.1,
   },
   {
-    id: 4,
     nombre: "Café Kenya 200g",
     precio: 2100,
     descuento: 0,
   },
   {
-    id: 5,
     nombre: "Café Guatemala 200g",
     precio: 1500,
     descuento: 0.2,
   },
-]; 
+];
 
 const dtoEnPorcentaje = (descuento) => `${descuento * 100}%`;
 const precioEnPesos = (precio) => `$${precio}`;
-
-alert("Calculadora de precios. Para salir escriba cerrar!");
 
 function calcularDescuento(precio, descuento) {
   let descuentoNumero = parseFloat(descuento);

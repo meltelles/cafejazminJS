@@ -14,6 +14,19 @@
   <main>
     <ul id="productos" class="productos">
     </ul>
+    <div class="formulario">
+      <form onsubmit="cargarProducto(this)">
+        <label for="nombre">Nombre</label>
+        <input id="nombre" name="nombre" type="text" />
+        <label for="precio">Precio</label>
+        <input id="precio" name="precio" type="number" />
+        <br />
+        <label for="descuento">Descuento (en %)</label>
+        <input id="descuento" name="descuento" type="text" />
+        <button type="submit">Crear producto</button>
+      </form>
+    </div>
+    
     <div class="controles">
       <button id="mostrar">Mostrar productos</button>
       <button id="mostrarSinDescuento">Mostrar productos sin descuento</button>
