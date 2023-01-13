@@ -29,7 +29,7 @@ const productos = [
     precio: 1500,
     descuento: 0.2,
   },
-];
+]; 
 
 const dtoEnPorcentaje = (descuento) => `${descuento * 100}%`;
 const precioEnPesos = (precio) => `$${precio}`;
