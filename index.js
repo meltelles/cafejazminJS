@@ -29,6 +29,50 @@ let productos = [
 const dtoEnPorcentaje = (descuento) => `${descuento * 100}%`;
 const precioEnPesos = (precio) => `$${precio}`;
 
+
+function cargarProducto(elementos) {
+  event.preventDefault();
+
+  let error = false;
+  const nombre = elementos.nombre.value;
+  const precio = parseFloat(elementos.precio.value);
+  const dto = parseFloat(elementos.descuento.value) / 100;
+
+  if (isNaN(precio) || precio <= 0) {
+    error = true;
+  }
+
+  if (isNaN(dto) || dto > 1 || dto < 0) {
+    error = true;
+  }
+
+  if (error) {
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: "Por favor verifica los datos",
+    });
+    return;
+  }
+
+  const producto = {
+    nombre: nombre,
+    precio: precio,
+    descuento: dto,
+  };
+
+  Swal.fire({
+    icon: "success",
+    title: "Exito!",
+    text: "Tu producto fue creado exitosamente",
+  });
+
+  productos.push(producto);
+  elementos.reset();
+  agregarElementos();
+  guardarProductos();
+}
+
 function calcularDescuento(precio, descuento) {
   let descuentoNumero = parseFloat(descuento);
   let precioNumero = parseFloat(precio);
@@ -38,50 +82,6 @@ function calcularDescuento(precio, descuento) {
 
 function evaluarCerrar(producto) {
   return producto === "cerrar";
-}
-
-function calcularPrecios() {
-  let producto;
-  let precio;
-  let descuento;
-  alert("Calculadora de precios. Para salir escriba: cerrar");
-  let termino = false;
-
-  do {
-    producto = prompt("Ingrese el nombre del producto: ");
-    if (evaluarCerrar(producto)) {
-      break;
-    }
-    precio = prompt("Ingrese el precio del producto: ");
-    if (evaluarCerrar(precio)) {
-      break;
-    }
-    if (isNaN(parseFloat(precio)) || precio < 0) {
-      alert("el precio no es valido. Intente devuelta.");
-      continue;
-    }
-    descuento = prompt(
-      "Ingrese el descuento del producto en porcentaje (ej: 20%): "
-    );
-
-    let descuentoNumero = parseFloat(descuento);
-    if (
-      isNaN(descuentoNumero) ||
-      descuentoNumero < 0 ||
-      descuentoNumero > 100
-    ) {
-      alert("el descuento no es valido. Intente devuelta.");
-      continue;
-    }
-    if (evaluarCerrar(descuento)) {
-      break;
-    }
-
-    const precioCalculado = calcularDescuento(precio, descuento);
-
-    alert(`El precio de ${producto} es: $${precioCalculado}`);
-    termino = true;
-  } while (!termino);
 }
 
 function crearProducto(producto) {
@@ -104,7 +104,7 @@ function crearProducto(producto) {
 }
 
 function agregarElementos(filtrar) {
-  console.log("funciona");
+  console.log(productos);
   const listaProductos = document.getElementById("productos");
   listaProductos.innerHTML = "";
   let productosFiltrados = productos;
@@ -131,10 +131,31 @@ function agregarElementos(filtrar) {
   }
 }
 
+function cargarProductos() {
+  const prod = localStorage.getItem("productos");
+  if (prod != null) {
+    productos = JSON.parse(prod);
+  }
+  agregarElementos();
+}
+
+function guardarProductos() {
+  localStorage.setItem("productos", JSON.stringify(productos));
+}
+
+function borrarProductos() {
+  localStorage.removeItem("productos");
+  productos = [];
+  agregarElementos();
+}
+
 const boton = document.getElementById("mostrar");
 const botonSinDescuento = document.getElementById("mostrarSinDescuento");
-const botonCalcular = document.getElementById("calcularPrecio");
+const botonBorrar = document.getElementById("borrar");
 
 boton.onclick = agregarElementos;
-botonCalcular.onclick = calcularPrecios;
+botonBorrar.onclick = borrarProductos;
 botonSinDescuento.onclick = () => agregarElementos("sinDescuento");
+
+// Los productos arrancan cargados cuando arranca la pagina
+cargarProductos();
