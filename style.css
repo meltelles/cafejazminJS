@@ -2,10 +2,6 @@
   margin: 0;
   }
 
-  * {
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  }
-  
   h1 {
     background-color: #f9ced5;
     color: #8b1825;
@@ -15,7 +11,7 @@
   
   h2 {
     text-align: center;
-    margin: 1.5rem;
+    padding: 0.5em;
   }
   
   div {
@@ -48,5 +44,6 @@
 }
 
 .formulario {
+  padding: 0.5em;
   display: flex;
 }
