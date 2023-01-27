@@ -1,55 +1,90 @@
 * {
   margin: 0;
-  }
+}
 
-  h1 {
-    background-color: #f9ced5;
-    color: #8b1825;
-    text-align: center;
-    padding: 0.5em;
-  }
-  
-  h2 {
-    text-align: center;
-    padding: 0.5em;
-  }
+header {
+  background-color: #f9ced5;
+  color: #8b1825;
+  text-align: center;
+  padding: 0.5em;
+  margin-bottom: 2em;
+  max-width: 100%;
+}
 
-  button{
-    background-color: #8b1825;
-    color: #f9ced5;
-    padding: 1em;
-    margin: 0.5em;
-    width: 90%;
-  }
-  
-  .productos {
-    text-align: center;
-    list-style: none;
-    display: flex;
-    align-content: space-between;
-    justify-content: center;
-    margin-top: 10px;
-  }
+button {
+  background-color: #8b1825;
+  color: #f9ced5;
+  padding: 1em;
+  margin: 0.5em;
+  width: 90%;
+}
 
-  .productos li * {
-    margin: 1.5em;
-  }
+.productos {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.productos ul {
+  list-style: none;
+  display: flex;
+  align-content: space-between;
+  justify-content: start;
+  flex-wrap: wrap;
+  margin: 0 auto;
+  /* flex-direction: column; */
+}
+
+.productos li {
+  margin: 1em 2em;
+  flex: 1;
+  flex-basis: 30%;
+  /* max-width: 40%; */
+  min-width: 300px;
+  max-width: 300px;
+  width: 300px;
+  flex-grow: 0;
+}
 
 .controles {
   display: flex;
-  justify-content: space-between;
-  flex-direction: row
+  gap: 1em;
 }
 
+.contenedorInputs {
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+  align-items: center;
+}
 .formulario {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 2em;
+  justify-content: center;
+}
+
+.cardProducto button {
+  background-color: #8b1825;
+  border: 0;
+}
+
+.resenas {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
 }
 
 #crearProducto {
-  background-color:#8b1825;
+  background-color: #4b9945;
+  border: 0;
   width: 100%;
   padding: 0.5em;
+}
+
+#cargar {
+  max-width: 150px;
+  margin-top: 2em;
 }

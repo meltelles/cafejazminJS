@@ -1,3 +1,7 @@
+// URL del API
+const URL = "https://jsonplaceholder.typicode.com/comments";
+
+// Lista inicial de productos
 let productos = [
   {
     nombre: "Café Etiopía 200g",
@@ -26,26 +30,43 @@ let productos = [
   },
 ];
 
+// Transforma descuento decimal a string con %
 const dtoEnPorcentaje = (descuento) => `${descuento * 100}%`;
+
+// Transforma numero a string con $
 const precioEnPesos = (precio) => `$${precio}`;
 
+// Calcula descuento dado un precio y un descuento
+const calcularDescuento = (precio, descuento) => {
+  let descuentoNumero = parseFloat(descuento);
+  let precioNumero = parseFloat(precio);
+  descuentoNumero /= 100;
+  return precio - precio * descuentoNumero;
+};
 
+// Procesa formulario y agrega un producto
 function cargarProducto(elementos) {
   event.preventDefault();
 
   let error = false;
   const nombre = elementos.nombre.value;
   const precio = parseFloat(elementos.precio.value);
-  const dto = parseFloat(elementos.descuento.value) / 100;
+  let dto = parseFloat(elementos.descuento.value) / 100;
 
+  // validacion de parametros
   if (isNaN(precio) || precio <= 0) {
     error = true;
   }
 
-  if (isNaN(dto) || dto > 1 || dto < 0) {
+  if (isNaN(dto)) {
+    dto = 0;
+  }
+
+  if (dto > 1 || dto < 0) {
     error = true;
   }
 
+  // En caso de error muestra notificacion al usuario
   if (error) {
     Swal.fire({
       icon: "error",
@@ -61,6 +82,7 @@ function cargarProducto(elementos) {
     descuento: dto,
   };
 
+  // Muestra notificacion exitosa si pudo agregar elemento
   Swal.fire({
     icon: "success",
     title: "Exito!",
@@ -73,38 +95,55 @@ function cargarProducto(elementos) {
   guardarProductos();
 }
 
-function calcularDescuento(precio, descuento) {
-  let descuentoNumero = parseFloat(descuento);
-  let precioNumero = parseFloat(precio);
-  descuentoNumero /= 100;
-  return precio - precio * descuentoNumero;
+// Crea card con estilo de bootstrap
+function crearCard({ nombre, precio, descuento, final }) {
+  const cardDiv = document.createElement("div");
+  cardDiv.className = "card text-center cardProducto";
+  const titleHeader = document.createElement("h4");
+  titleHeader.className = "card-header";
+  titleHeader.innerText = nombre;
+  const bodyDiv = document.createElement("div");
+  bodyDiv.className = "card-body";
+
+  const precioP = document.createElement("p");
+  precioP.className = "card-text";
+  precioP.innerText = precio;
+  const dtoP = document.createElement("p");
+  dtoP.className = "card-text";
+  dtoP.innerText = descuento;
+  const finalP = document.createElement("p");
+  finalP.className = "card-text";
+  finalP.innerText = final;
+
+  const deleteBtn = document.createElement("button");
+  deleteBtn.className = "btn btn-danger btn-block";
+  deleteBtn.innerText = "Borrar producto";
+  deleteBtn.onclick = () => {
+    productos = productos.filter((e) => e.nombre != nombre);
+    agregarElementos();
+  };
+
+  bodyDiv.appendChild(precioP);
+  bodyDiv.appendChild(dtoP);
+  bodyDiv.appendChild(finalP);
+  bodyDiv.appendChild(deleteBtn);
+
+  cardDiv.appendChild(titleHeader);
+  cardDiv.appendChild(bodyDiv);
+
+  return cardDiv;
 }
 
-function evaluarCerrar(producto) {
-  return producto === "cerrar";
-}
-
+// Crea el elemento de la lista
 function crearProducto(producto) {
   const productoElem = document.createElement("li");
-  const nombreElem = document.createElement("h4");
-  nombreElem.innerHTML = producto.nombre;
-  const precioElem = document.createElement("p");
-  precioElem.innerHTML = producto.precio;
-  const descuentoElem = document.createElement("p");
-  descuentoElem.innerHTML = producto.descuento;
-  const precioFinalElem = document.createElement("p");
-  precioFinalElem.innerHTML = producto.final;
-
-  productoElem.appendChild(nombreElem);
-  productoElem.appendChild(precioElem);
-  productoElem.appendChild(descuentoElem);
-  productoElem.appendChild(precioFinalElem);
+  productoElem.appendChild(crearCard(producto));
 
   return productoElem;
 }
 
+// Itera la lista de productos y por cada uno crea un elemento
 function agregarElementos(filtrar) {
-  console.log(productos);
   const listaProductos = document.getElementById("productos");
   listaProductos.innerHTML = "";
   let productosFiltrados = productos;
@@ -123,14 +162,13 @@ function agregarElementos(filtrar) {
       )}`,
     };
   });
-  console.log(productosEnTexto);
-
   for (let p of productosEnTexto) {
     const elem = crearProducto(p);
     listaProductos.appendChild(elem);
   }
 }
 
+// Popula la lista de productos desde un JSON guardado en localStorage
 function cargarProductos() {
   const prod = localStorage.getItem("productos");
   if (prod != null) {
@@ -139,23 +177,46 @@ function cargarProductos() {
   agregarElementos();
 }
 
+
+// Guarda la lista de productos en localStorage
 function guardarProductos() {
   localStorage.setItem("productos", JSON.stringify(productos));
 }
 
+// Borra los productos y los elimina de localStorage
 function borrarProductos() {
   localStorage.removeItem("productos");
   productos = [];
   agregarElementos();
 }
 
+// Carga una lista de comentarios desde el API
+async function cargarComentarios() {
+  const cargando = document.getElementById("cargando");
+  cargando.style.display = "block";
+  const resp = await fetch(URL, { method: "GET" });
+  const comentarios = await resp.json();
+  const lista = document.getElementById("resenas");
+  cargando.remove();
+  botonCargarResenas.remove();
+
+  for (let i = 0; i < comentarios.length && i < 10; i++) {
+    const li = document.createElement("li");
+    li.className = "list-group-item";
+    li.innerText = comentarios[i].name;
+    lista.appendChild(li);
+  }
+}
+
 const boton = document.getElementById("mostrar");
 const botonSinDescuento = document.getElementById("mostrarSinDescuento");
 const botonBorrar = document.getElementById("borrar");
+const botonCargarResenas = document.getElementById("cargar");
 
 boton.onclick = agregarElementos;
 botonBorrar.onclick = borrarProductos;
 botonSinDescuento.onclick = () => agregarElementos("sinDescuento");
+botonCargarResenas.onclick = cargarComentarios;
 
 // Los productos arrancan cargados cuando arranca la pagina
 cargarProductos();
